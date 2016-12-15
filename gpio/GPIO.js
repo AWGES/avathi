@@ -1,5 +1,5 @@
 /*
-	Projeto Athiva: arquivo para gerenciamento do hardware 
+	Projeto Avathi: arquivo para gerenciamento do hardware 
 */
 var inherits = require('util').inherits; 
 var EventEmitter = require('events').EventEmitter;
