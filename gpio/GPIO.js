@@ -164,6 +164,9 @@ function gpio_cb(cbpin){
 				event = 0;
 				buzzerSong = 3;
 				buzzerTimer = setInterval(buzzer, buzzerPeriod);
+				if(connected){
+					server.publish('/'+unique_id+ "/emergency", "ATIVO");
+				}
 			}
 			else if (emergency && !emFlag){
 				emergency = 0;
@@ -176,6 +179,9 @@ function gpio_cb(cbpin){
 				});
 				clearInterval(blinkTimer);
 				buzzerRST();
+				if(connected){
+					server.publish('/'+unique_id+ "/emergency", "DESATIVO");
+				}
 			}
 			
 		}
