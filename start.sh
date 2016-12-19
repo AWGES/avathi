@@ -63,3 +63,4 @@ export GPIO_LOG_FILE="gpio.log"					# Arquivo onde salvar o LOG do script de lei
 
 node bluetooth/main.js >> $BLE_LOG_FULL &
 #node gpio/main.j >> $GPIO_LOG_FILE
+exec $SHELL
