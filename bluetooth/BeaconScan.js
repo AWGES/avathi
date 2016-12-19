@@ -1,18 +1,40 @@
 // ===== CONFIGURAÇÕES =====
 
-var MQTT_ReqTimeout = 3000;                               		// Tempo em milisegundos para tentar reconectar no broker MQTT.
-var MQTT_IPv4_addr  = '127.0.0.1';                        		// Endereço do broker MQTT local.
 
-var MQTT_GPIO_Event_Topic       = "/GPIOe";               		// Tópico onde serão observados eventos no GPIO
-var MQTT_NearBeacons_Topic      = "/nearBeacon";          		// Tópico no qual publicar beacons próximos continuamente
-var MQTT_NearBeacons_Near_Topic = "/nearBeacon/near";     		// Tópico no qual publicar o beacon mais próximo quando requisitado
+// Tempo em milisegundos para tentar reconectar no broker MQTT.
+var MQTT_ReqTimeout = process.env.MQTT_REQ_TIMEOUT;
 
-var BEACON_NearBeaconRSSIThreshold = -50;						// RSSI mínimo para publicar o beacon no tópico de leitura contínua
-var BEACON_NearestBeaconRSSIThreshold = -15;					// RSSI mínimo para publicar o beacon no tópico de beacon mais próximo (Ativado pelo tópico GPIO Event)
+// Endereço do broker MQTT local.
+var MQTT_IPv4_addr  = process.env.MQTT_ADDR;
 
 
-var BEACON_RemoveFromListAfterMs = 1000;						// Tempo de vida de um beacon na lista de beacons recentes.
-var BEACON_PoolTimeMs = 200;									// Tempo para executar a tarefa de verificação e limpeza
+
+// Tópico onde serão observados eventos no GPIO
+var MQTT_GPIO_Event_Topic       = process.env.MQTT_GPIO_EVENT_SUB_TOPIC;
+
+// Tópico no qual publicar beacons próximos continuamente
+var MQTT_NearBeacons_Topic      = process.env.MQTT_NEAR_BEACONS_SUB_TOPIC;
+
+// Tópico no qual publicar o beacon mais próximo quando requisitado
+var MQTT_NearBeacons_Near_Topic = process.env.MQTT_NEAREST_BEACON_SUB_TOPIC;
+
+
+// RSSI mínimo para publicar o beacon no tópico de leitura contínua
+var BEACON_NearBeaconRSSIThreshold = process.env.BLE_NEAR_RSSI_THRESHOLD;
+
+// RSSI mínimo para publicar o beacon no tópico de beacon mais próximo (Ativado pelo tópico GPIO Event)
+var BEACON_NearestBeaconRSSIThreshold = process.env.BLE_NEAREST_RSSI_THRESHOLD;
+
+
+
+// Tempo de vida de um beacon na lista de beacons recentes.
+var BEACON_RemoveFromListAfterMs = process.env.BLE_REMOVE_FROM_LIST_AFTER_MS;
+
+// Tempo para executar a tarefa de verificação e limpeza
+var BEACON_PoolTimeMs = process.env.BLE_POOL_TIME_MS;
+
+
+
 
 // ===== INÍCIO DO PROGRAMA =====
 
@@ -23,15 +45,15 @@ var mqtt            = require('mqtt');
 var noble           = require('noble');
 
 
-var RASPI_Unique_id = 'undefined';                        		// Conterá o ID único utilizado nas publicações MQTT
+var RASPI_Unique_id = 'undefined';                        			// Conterá o ID único utilizado nas publicações MQTT
 
-var BEACON_Identifier = Buffer([0x4C, 0x00, 0x02, 0x15])		// Os primeiros 4 bytes identificam se é um iBeacon.
-var BEACON_RecentBeaconList = [];					        	// Lista para armazenar beacons escaneados.
+var BEACON_Identifier = Buffer([0x4C, 0x00, 0x02, 0x15])			// Os primeiros 4 bytes identificam se é um iBeacon.
+var BEACON_RecentBeaconList = [];					        		// Lista para armazenar beacons escaneados.
 var BEACON_BeaconScanCounter = 0;
 
-var MQTT_Server     = mqtt.connect('mqtt:' + MQTT_IPv4_addr);	// Objeto da conexão com o broker MQTT.
-var MQTT_Connected  = false;                              		// Define se está conectado com o broker MQTT.
-var MQTT_GPIOEvent_SendNear_Flag = false;						// Define se deve ser enviado o beacon mais próximo
+var MQTT_Server     = mqtt.connect('mqtt:' + MQTT_IPv4_addr);		// Objeto da conexão com o broker MQTT.
+var MQTT_Connected  = false;                              			// Define se está conectado com o broker MQTT.
+var MQTT_GPIOEvent_SendNear_Flag = false;							// Define se deve ser enviado o beacon mais próximo
 
 // Armazena o nome completo dos tópicos
 var MQTT_NearBeacons_FullTopic = '';
