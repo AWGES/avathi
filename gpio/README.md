@@ -1,4 +1,5 @@
-/* Projeto Avathi definicao dos GPIOs*/
+/* Projeto Avathi definicao dos GPIOs BitBucket*/
+
 var gpio_input = [7, 8, 10, 11, 12, 13, 15, 16, 18, 19];
 var gpio_emergency = 21;
 
