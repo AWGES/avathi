@@ -37,15 +37,15 @@ var buzzerSt 	   = 0;
 var buzzerStCount  = 0;
 
 var unique         = require('getmac');
-var timeoutReqMQTT = 3000;
-var mqttIPv4       = '127.0.0.1';
+var timeoutReqMQTT = process.env.MQTT_REQ_TIMEOUT;
+var mqttIPv4       = process.env.MQTT_ADDR;
 var mqtt           = require('mqtt');
 var server         = mqtt.connect('mqtt:'+mqttIPv4);
 var connected      = 0;
 var unique_id      = 'undefined';
-var snifferTopic   = '/nearBeacon/near';
-var GPIOe		   = '/GPIOe';
-var calls		   = '/calls';
+var snifferTopic   = process.env.MQTT_NEAREST_BEACON_SUB_TOPIC;	//   "/nearBeacon/near"
+var GPIOe		   = process.env.MQTT_GPIO_EVENT_SUB_TOPIC;		//   "/GPIOe"
+var calls		   = process.env.MQTT_CALLS_SUB_TOPIC;			//	 "/calls"
 var pubCalls	   = 0;
 
 var emergency 	   = 0;

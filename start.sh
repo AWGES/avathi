@@ -3,26 +3,22 @@
 
 ## Configurações ###########
 
-export MQTT_ADDR="127.0.0.1"					# Endereço do broker MQTT
-export MQTT_REQ_TIMEOUT=3000					# Tempo de reconexão com o broker
-export MQTT_GPIO_EVENT_SUB_TOPIC="/GPIOe"			# Tópico que envia requisição de beacon muito próximo
-export MQTT_NEAR_BEACONS_SUB_TOPIC="/nearBeacon"		# Tópico para enviar todos os beacons próximos
+export MQTT_ADDR="127.0.0.1"								# Endereço do broker MQTT
+export MQTT_REQ_TIMEOUT=3000								# Tempo de reconexão com o broker
+export MQTT_CALLS_SUB_TOPIC="/calls"						# Tópico para publicação das chamadas iniciadas pelo botão
+export MQTT_GPIO_EVENT_SUB_TOPIC="/GPIOe"					# Tópico que envia requisição de beacon muito próximo
+export MQTT_NEAR_BEACONS_SUB_TOPIC="/nearBeacon"			# Tópico para enviar todos os beacons próximos
 export MQTT_NEAREST_BEACON_SUB_TOPIC="/nearBeacon/near"		# Tópico para resposta da requisição de beacon muito próximo
 
+
 export BLE_NEAR_RSSI_THRESHOLD=-50				# Threshold de detecção geral do beacon
-export BLE_NEAREST_RSSI_THRESHOLD=-15				# Threshold de detecção do beacon muito próximo
-export BLE_REMOVE_FROM_LIST_AFTER_MS=5000			# Quanto tempo esperar até remover o beacon da lista de beacons recentes
+export BLE_NEAREST_RSSI_THRESHOLD=-15			# Threshold de detecção do beacon muito próximo
+export BLE_REMOVE_FROM_LIST_AFTER_MS=5000		# Quanto tempo esperar até remover o beacon da lista de beacons recentes
 export BLE_POOL_TIME_MS=1000					# De quanto em quanto tempo verificar a lista para executar remoções
 
-export ATHIVA_LOG_DIR="/var/log/ATHIVA"				# Diretório onde salvar os LOGs do projeto
+export ATHIVA_LOG_DIR="/var/log/ATHIVA"			# Diretório onde salvar os LOGs do projeto
 export BLE_LOG_FILE="bluetooth.log"				# Arquivo onde salvar o LOG do script de bluetooth/escaneamento de beacons
 export GPIO_LOG_FILE="gpio.log"					# Arquivo onde salvar o LOG do script de leitura/escrita nos GPIOs (botões e sinalização)
-
-
-# Exemplo
-export GPIO_TEMPO_DO_PISCA_PISCA_SEI_LA_O_QUE=1000
-
-
 
 
 
