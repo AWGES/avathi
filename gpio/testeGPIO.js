@@ -5,7 +5,7 @@ var gpio_emergency = 21;
 
 var gpio_output = [22, 23, 24, 26, 29, 31, 32, 33, 35, 36];
 var gpio_pwm = [37];
-
+var emFlag = 0;
 
 function lookIndex(v, value){
 	var i = 0;
@@ -51,9 +51,9 @@ for (var i = 0; i < 5; i++){
 				console.log("PIN: " +pin +" LOW");
 				rpio.msleep(50);
 		});
-        rpio.write(gpio_emergency, rpio.HIGH);
+        rpio.write(gpio_pwm[0], rpio.HIGH);
         rpio.msleep(10);
-        rpio.write(gpio_emergency, rpio.LOW);
+        rpio.write(gpio_pwm[0], rpio.LOW);
 }
 
 function poll(cbpin){
@@ -64,10 +64,16 @@ function poll(cbpin){
 		console.log("Botao:" + (index+1));
 		rpio.write(gpio_output[index],rpio.HIGH);
 	}
-	if(normal == 0 && cbpin == gpio_emergency){
+	if(!normal && cbpin == gpio_emergency && emFlag == 0){
+		emFlag = 1;
+		setTimeout(function(){emFlag=0;}, 150);
+		console.log("emergency: ativo");
 		rpio.write(gpio_pwm,rpio.HIGH);
 	}
-	else if (normal && cbpin == gpio_emergency){
+	else if (normal && cbpin == gpio_emergency && emFlag == 0){
+		console.log("emergency: desativo");
 		rpio.write(gpio_pwm,rpio.LOW);
+		emFlag = 1;
+		setTimeout(function(){emFlag=0;}, 150);
 	}
 }

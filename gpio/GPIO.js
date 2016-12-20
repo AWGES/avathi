@@ -152,6 +152,8 @@ function gpio_cb(cbpin){
 	if (!GNU_TEST)
 	{ 
 		//obj.emit('gpio', cbpin);
+		// var normal = (rpio.read(gpio_emergency) ? 0 : 1)
+		console.log(cbpin);
 		if(cbpin == gpio_emergency)
 		{
 			var state = rpio.read(gpio_emergency) ? 1 : 0;
@@ -159,9 +161,9 @@ function gpio_cb(cbpin){
 			if(!emergency && !emFlag && state){
 				emergency = 1;
 				emFlag = 1;
-				setTimeout(function(){emFlag=0;}, 50);
-				// console.log(emergency)
+				setTimeout(function(){emFlag=0;}, 150);
 
+				// console.log(emergency)
 				gpio_output.forEach(function(pin){
 						rpio.write(pin,rpio.LOW);
 				});
@@ -179,7 +181,7 @@ function gpio_cb(cbpin){
 			else if (emergency && !emFlag){
 				emergency = 0;
 				emFlag = 1;
-				setTimeout(function(){emFlag=0;}, 50);
+				setTimeout(function(){emFlag=0;}, 150);
 				// console.log(emergency)
 
 				gpio_output.forEach(function(pin){
