@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ## Configurações ###########
 
 export MQTT_ADDR="127.0.0.1"								# Endereço do broker MQTT
