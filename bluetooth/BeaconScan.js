@@ -101,8 +101,27 @@ var BEACON_InitScan = function(){
 
 	noble.on('discover', function(peripheral) {
 
-		if(peripheral.advertisement.manufacturerData && peripheral.advertisement.manufacturerData.slice(0, 4).compare(BEACON_Identifier)==0){
+		uuid = 0;
 
+		if (peripheral.advertisement.manufacturerData && !peripheral.advertisement.serviceData.length && peripheral.advertisement.manufacturerData.slice(0, 4).compare(BEACON_Identifier)==0) {
+			// iBeacon
+			uuid = peripheral.advertisement.manufacturerData.slice(8, 24);
+			// Como a ideia é utilizar um UUID por aplicação e identificar
+			// beacons únicos com Minor e Major, foram cortados os 4 primeiros
+			// bytes do UUID do iBeacon e concatenados os 4 bytes de minor e major.
+		}
+		
+		if(peripheral.advertisement.serviceData.length && !peripheral.advertisement.manufacturerData) {
+			// Eddystone
+			uuid = peripheral.advertisement.serviceData[0]['data'].slice(2, 18);
+			// Como a ideia é utilizar um UUID único por beacon, o UUID
+			// não foi cortado e permanece sendo o valor original.
+		}
+		
+		
+		// Se for um iBeacon ou Eddystone
+		if( uuid!=0 ){
+		
 			if(peripheral.rssi > BEACON_NearBeaconRSSIThreshold){
 
 
@@ -116,7 +135,7 @@ var BEACON_InitScan = function(){
 				var data = peripheral.advertisement.manufacturerData;
 
 				var beacon = {};
-				beacon['uuid'] = data.slice(4, 20).toString('hex');
+				beacon['uuid'] = uuid.toString('hex');
 				beacon['rssi'] = peripheral.rssi;
 				beacon['time'] = Date.now();
 
