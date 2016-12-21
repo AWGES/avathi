@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## SKELETON: AVATHI DIR ##
+## SKELETON: EXEC SCRIPTS ##
+
+pkill -f "node $AVATHI_DIR/$BLE_EXEC"
+pkill -f "node $AVATHI_DIR/$GPIO_EXEC"
