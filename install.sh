@@ -82,7 +82,7 @@ sed -i 's@## SKELETON: AVATHI DIR ##@AVATHI_DIR="'$PROJECT_DIR'"@' stop.sh
 chmod +x stop.sh
 
 
-
+exit 0
 
 
 # Baixa e instala o NVM
