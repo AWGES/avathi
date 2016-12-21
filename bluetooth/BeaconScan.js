@@ -18,6 +18,8 @@ var MQTT_NearBeacons_Topic      = process.env.MQTT_NEAR_BEACONS_SUB_TOPIC;
 // Tópico no qual publicar o beacon mais próximo quando requisitado
 var MQTT_NearBeacons_Near_Topic = process.env.MQTT_NEAREST_BEACON_SUB_TOPIC;
 
+var MQTT_NearBeacons_PublishAll = process.env.MQTT_NEARBEACONS_PUBLISHALL;
+
 
 // RSSI mínimo para publicar o beacon no tópico de leitura contínua
 var BEACON_NearBeaconRSSIThreshold = process.env.BLE_NEAR_RSSI_THRESHOLD;
@@ -102,6 +104,7 @@ var BEACON_InitScan = function(){
 	noble.on('discover', function(peripheral) {
 
 		uuid = 0;
+		beaconType=0;
 
 		if (peripheral.advertisement.manufacturerData && !peripheral.advertisement.serviceData.length && peripheral.advertisement.manufacturerData.slice(0, 4).compare(BEACON_Identifier)==0) {
 			// iBeacon
@@ -109,6 +112,7 @@ var BEACON_InitScan = function(){
 			// Como a ideia é utilizar um UUID por aplicação e identificar
 			// beacons únicos com Minor e Major, foram cortados os 4 primeiros
 			// bytes do UUID do iBeacon e concatenados os 4 bytes de minor e major.
+			beaconType="ibeacon";
 		}
 		
 		if(peripheral.advertisement.serviceData.length && !peripheral.advertisement.manufacturerData) {
@@ -116,14 +120,16 @@ var BEACON_InitScan = function(){
 			uuid = peripheral.advertisement.serviceData[0]['data'].slice(2, 18);
 			// Como a ideia é utilizar um UUID único por beacon, o UUID
 			// não foi cortado e permanece sendo o valor original.
+			beaconType="eddystone";
 		}
 		
 		
 		// Se for um iBeacon ou Eddystone
-		if( uuid!=0 ){
+		if( beaconType!=0 ){
 		
 			if(peripheral.rssi > BEACON_NearBeaconRSSIThreshold){
 
+				console.log('[BLE ] - ' + beaconType+'-'+uuid.slice(12, 16).toString('hex'));
 
 				//Somente para não abusar do log, conta de 5 em 5 leituras para avisar que está lendo beacons
 				BEACON_BeaconScanCounter++;
@@ -141,6 +147,8 @@ var BEACON_InitScan = function(){
 
 				// Se estiver conectado ao broker MQTT
 				if(MQTT_Connected){
+
+					MQTT_Server.publish(MQTT_NearBeacons_PublishAll, JSON.stringify(beacon));
 
 					// Testa se o beacon já foi enviado faz pouco tempo. Caso contrário, adiciona à lista de recentes e envia a publicação.
 					BEACON_RecentBeaconList_QueryAndPush(beacon, function(){
@@ -204,7 +212,7 @@ var BEACON_PoolRecentBeaconList = function(){
  // Tenta reconectar no broker MQTT
  var MQTT_Reconnect = function(){
    console.log('[MQTT] Tentando conectar ao broker IPv4:'+MQTT_IPv4_addr);
-   MQTT_Server.connect('mqtt:' + MQTT_IPv4_addr);
+   MQTT_Server = mqtt.connect('mqtt:' + MQTT_IPv4_addr);
  };
 
 

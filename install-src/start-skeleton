@@ -8,8 +8,8 @@ export MQTT_REQ_TIMEOUT=3000								# Tempo de reconexão com o broker
 export MQTT_CALLS_SUB_TOPIC="/calls"						# Tópico para publicação das chamadas iniciadas pelo botão
 export MQTT_GPIO_EVENT_SUB_TOPIC="/GPIOe"					# Tópico que envia requisição de beacon muito próximo
 export MQTT_NEAR_BEACONS_SUB_TOPIC="/nearBeacon"			# Tópico para enviar todos os beacons próximos
+export MQTT_NEARBEACONS_PUBLISHALL="/nearBeacon/all"		# Tópico no qual enviar todos os beacons lidos
 export MQTT_NEAREST_BEACON_SUB_TOPIC="/nearBeacon/near"		# Tópico para resposta da requisição de beacon muito próximo
-
 
 export BLE_NEAR_RSSI_THRESHOLD=-50				# Threshold de detecção geral do beacon
 export BLE_NEAREST_RSSI_THRESHOLD=-15			# Threshold de detecção do beacon muito próximo

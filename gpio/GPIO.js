@@ -301,7 +301,7 @@ function timeout_pub(){
 
 var reconMQTT = function(){
   console.log('[GPIO-MQTT] Tentando conectar ao broker IPv4:'+mqttIPv4);
-  server.connect('mqtt:'+mqttIPv4);
+  server = mqtt.connect('mqtt:'+mqttIPv4);
 };
 
 server.on('message', function (topic, message){
